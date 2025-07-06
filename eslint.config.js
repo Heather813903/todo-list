@@ -37,8 +37,7 @@ export default defineConfig([
       ...react.configs['jsx-runtime'].rules,
 
 
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      'no-unused-vars': 'warn',
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
       'react/prop-types': 'off',
     },
   },
