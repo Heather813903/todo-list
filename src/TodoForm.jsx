@@ -5,7 +5,7 @@ function TodoForm() {
         <form>
             <label htmlFor="todoTitle">Todo</label>
             <input type="text" id="todoTitle" />
-            <button type="submit" style={{ backgroundColor: 'blue', color: 'white', fontSize: '16px'}}>Add Todo</button>  
+            <button type="submit" style={{ backgroundColor: 'blue', color: 'white', fontSize: '14px'}}>Add Todo</button>  
         </form>
     );
 
