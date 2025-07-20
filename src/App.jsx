@@ -4,12 +4,12 @@ import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 
 function App() {
-  const [exampleSateValue, setExampleStateValue] = useState(42);
+  const [newTodo, setNewTodo] = useState("sample todo");
   return (
     <div>
       <h1>My Todos</h1>
       <TodoForm />
-      <p>42</p>
+      <p>New Todo: {newTodo}</p>
       <TodoList />
     </div> 
     
