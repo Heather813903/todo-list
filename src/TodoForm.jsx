@@ -33,7 +33,7 @@ function TodoForm({ onAddTodo }) {
             />
          
             <button type="submit" 
-                    disabled={!workingTodoTitle.trim() === ''}
+                    disabled={workingTodoTitle.trim() === ''}
                     style={{ backgroundColor: 'blue', color: 'white', fontSize: '14px'}}
             >
                     Add Todo
