@@ -1,9 +1,19 @@
 import React from 'react';
 
- function TodoListItem({ todo }) {
+ function TodoListItem({ todo, onCompleteTodo }) {
     return (
         <li>
-            {todo.title}
+            <form>
+                {/* Checkbox input */}
+                <input
+                    type="checkbox"
+                    checked={todo.isCompleted}
+                    onChange={() => onCompleteTodo(todo.id)}
+                />
+                {/* Todo title */}
+                {todo.title}
+            </form>
+            
         </li>
     );
 }
