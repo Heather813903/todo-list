@@ -53,7 +53,7 @@ function App() {
       records: [
         {
           fields: {
-            title: newTodo,
+            title: newTodo.title,
             isCompleted: false,
           },
         },
