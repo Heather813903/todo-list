@@ -1,6 +1,13 @@
 import React from 'react'
 
-export default function TodosViewForm({sortField, setSortField, sortDirection, setSortDirection}) {
+export default function TodosViewForm({ 
+  sortField,
+  setSortField,
+  sortDirection,
+  setSortDirection,
+  queryString,
+  setQueryString
+}) {
     const preventRefresh = (e) => {
         e.preventDefault();
     };
