@@ -9,6 +9,7 @@ import TodosViewForm from './features/TodosViewForm.jsx';
 function encodeUrl({ url, sortField, sortDirection, queryString }) {
   let searchQuery = "";
   if (queryString) {
+    searchQuery = `&filterByFormula=SEARCH("${queryString}", {title})`;
    
   }
 
@@ -68,7 +69,7 @@ function App() {
 
     fetchTodos();
    
-  }, [url, token, sortField, sortDirection, queryString]);
+  }, [sortField, sortDirection, queryString]);
 
    async function addTodo(newTodo) {
     setErrorMessage("");
