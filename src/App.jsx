@@ -2,47 +2,63 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import TodoForm from './features/TodoForm';
 import TodoList from './features/TodoList/TodoList.jsx';
+import TodosViewForm from './features/TodosViewForm.jsx';
+
+function encodeUrl({ url, sortField, sortDirection, queryString }) {
+  let searchQuery = "";
+  if (queryString) {
+    searchQuery = `&filterByFormula=SEARCH("${queryString}", {title})`;
+  }
+  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`; 
+  return encodeURI(`${url}?${sortQuery}${searchQuery}`);
+}
+
 
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [sortField, setSortField] = useState("createdTime");
+  const [sortDirection, setSortDirection] = useState("desc");
+  const [queryString, setQueryString] = useState("");
 
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
   // Fetch todos on mount
   useEffect(() => {
-    const fetchTodos = async () => {
-      setIsLoading(true);
-      setErrorMessage("");
+  const fetchTodos = async () => {
+    setIsLoading(true);
+    setErrorMessage("");
 
-      const options = {
-        method: "GET",
-        headers: { Authorization: token },
-      };
+    const requestUrl = encodeUrl({ url, sortField, sortDirection, queryString });
 
-      try {
-        const response = await fetch(url, options);
-        if (!response.ok) throw new Error(response.statusText || "Failed to fetch todos");
-
-        const data = await response.json();
-        const fetchedTodos = data.records.map(record => ({
-          id: record.id,
-          title: record.fields.title || "",
-          isCompleted: record.fields.isCompleted || false,
-        }));
-        setTodoList(fetchedTodos);
-      } catch (error) {
-        setErrorMessage(error.message);
-      } finally {
-        setIsLoading(false);
-      }
+    const options = {
+      method: "GET",
+      headers: { Authorization: token },
     };
 
-    fetchTodos();
-  }, []);
+    try {
+      const response = await fetch(requestUrl, options);
+      if (!response.ok) throw new Error(response.statusText || "Failed to fetch todos");
+
+      const data = await response.json();
+      const fetchedTodos = data.records.map(record => ({
+        id: record.id,
+        title: record.fields.title || "",
+        isCompleted: record.fields.isCompleted || false,
+      }));
+      setTodoList(fetchedTodos);
+    } catch (error) {
+      setErrorMessage(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchTodos();
+}, [url, token, sortField, sortDirection, queryString]); // ✅ dependency array
 
   // Add Todo
   async function addTodo(newTodo) {
@@ -70,7 +86,8 @@ function App() {
     };
 
     try {
-      const response = await fetch(url, options);
+      const requestUrl = encodeUrl({ url, sortField, sortDirection,queryString });
+      const response = await fetch(requestUrl, options);
       if (!response.ok) throw new Error(response.statusText || "Failed to add todo");
 
       const data = await response.json();
@@ -121,7 +138,8 @@ function App() {
     };
 
     try {
-      const response = await fetch(url, options);
+      const requestUrl = encodeUrl({ url, sortField, sortDirection, queryString });
+      const response = await fetch(requestUrl, options);
       if (!response.ok) throw new Error(response.statusText || "Failed to update todo");
 
       const data = await response.json();
@@ -180,7 +198,8 @@ function App() {
     };
 
     try {
-      const response = await fetch(url, options);
+      const requestUrl = encodeUrl({ url, sortField, sortDirection, queryString });
+      const response = await fetch(requestUrl, options);
       if (!response.ok) throw new Error(response.statusText || "Failed to complete todo");
 
       const data = await response.json();
@@ -213,6 +232,18 @@ function App() {
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
         isLoading={isLoading}
+      />
+
+
+      <hr />
+
+      <TodosViewForm
+        sortField={sortField}
+        setSortField={setSortField}
+        sortDirection={sortDirection}
+        setSortDirection={setSortDirection}
+        queryString={queryString}
+        setQueryString={setQueryString} 
       />
 
       {errorMessage && (
