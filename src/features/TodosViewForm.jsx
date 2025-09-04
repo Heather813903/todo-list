@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 
 export default function TodosViewForm({ 
   sortField,
@@ -8,9 +8,23 @@ export default function TodosViewForm({
   queryString,
   setQueryString
 }) {
-    const preventRefresh = (e) => {
-        e.preventDefault();
-    };
+
+  const [localQueryString, setLocalQueryString] = useState(queryString);
+
+  const preventRefresh = (e) => {
+    e.preventDefault();
+  };
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      setQueryString(localQueryString);
+    }, 500);
+    
+      
+    return () => clearTimeout(debounce);
+  }, [localQueryString, setQueryString]);
+
+
     
   return (
     <form onSubmit={preventRefresh}>    
