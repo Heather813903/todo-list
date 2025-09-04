@@ -33,12 +33,12 @@ export default function TodosViewForm({
           <input  
             id="search"
             type="text"
-            value={queryString}
-            onChange={e => setQueryString(e.target.value)}
+            value={localQueryString}
+            onChange={e => setLocalQueryString(e.target.value)}
           />
           <button
             type="button"
-            onClick={() => setQueryString('')}          
+            onClick={() => setLocalQueryString('')}          
           >
             Clear  
           </button>
