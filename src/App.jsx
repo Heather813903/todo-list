@@ -1,22 +1,45 @@
+// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import TodoForm from './features/TodoForm';
 import TodoList from './features/TodoList/TodoList.jsx';
+import TodosViewForm from './features/TodosViewForm.jsx';
+
+
+function encodeUrl({ url, sortField, sortDirection, queryString }) {
+  let searchQuery = "";
+  if (queryString) {
+    searchQuery = `&filterByFormula=SEARCH("${queryString}", {title})`;
+   
+  }
+
+  const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+  return encodeURI(`${url}?${sortQuery}${searchQuery}`);
+}
 
 function App() {
+  
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
+
+  const [sortField, setSortField] = useState("createdTime");
+  const [sortDirection, setSortDirection] = useState("desc");
+  const [queryString, setQueryString] = useState(""); 
+
+
   const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  // Fetch todos on mount
-  useEffect(() => {
+  
+    useEffect(() => {
     const fetchTodos = async () => {
       setIsLoading(true);
       setErrorMessage("");
+
+      const requestUrl = encodeUrl({ url, sortField, sortDirection, queryString });
 
       const options = {
         method: "GET",
@@ -24,15 +47,18 @@ function App() {
       };
 
       try {
-        const response = await fetch(url, options);
-        if (!response.ok) throw new Error(response.statusText || "Failed to fetch todos");
+        const response = await fetch(requestUrl, options);
+        if (!response.ok) {
+          throw new Error(response.statusText || "Failed to fetch todos");
+        }
 
         const data = await response.json();
-        const fetchedTodos = data.records.map(record => ({
+               const fetchedTodos = (data.records || []).map((record) => ({
           id: record.id,
           title: record.fields.title || "",
           isCompleted: record.fields.isCompleted || false,
         }));
+
         setTodoList(fetchedTodos);
       } catch (error) {
         setErrorMessage(error.message);
@@ -42,10 +68,10 @@ function App() {
     };
 
     fetchTodos();
-  }, []);
+   
+  }, [sortField, sortDirection, queryString]);
 
-  // Add Todo
-  async function addTodo(newTodo) {
+   async function addTodo(newTodo) {
     setErrorMessage("");
     setIsSaving(true);
 
@@ -54,7 +80,7 @@ function App() {
         {
           fields: {
             title: newTodo.title,
-            isCompleted: false,
+            isCompleted: newTodo.isCompleted || false,
           },
         },
       ],
@@ -70,16 +96,23 @@ function App() {
     };
 
     try {
-      const response = await fetch(url, options);
-      if (!response.ok) throw new Error(response.statusText || "Failed to add todo");
+      const requestUrl = encodeUrl({ url, sortField, sortDirection, queryString });
+      const response = await fetch(requestUrl, options);
+
+      if (!response.ok) {
+        throw new Error(response.statusText || "Failed to add todo");
+      }
 
       const data = await response.json();
+
+      const savedRecord = data.records && data.records[0];
       const savedTodo = {
-        id: data.records[0].id,
-        title: data.records[0].fields.title,
-        isCompleted: data.records[0].fields.isCompleted || false,
+        id: savedRecord.id,
+        title: savedRecord.fields.title,
+        isCompleted: savedRecord.fields.isCompleted || false,
       };
-      setTodoList(prev => [...prev, savedTodo]);
+
+      setTodoList((prev) => [...prev, savedTodo]);
     } catch (error) {
       setErrorMessage(error.message);
     } finally {
@@ -87,17 +120,14 @@ function App() {
     }
   }
 
-  // Update Todo
   async function updateTodo(editedTodo) {
     setErrorMessage("");
     setIsSaving(true);
 
-    const originalTodo = todoList.find(todo => todo.id === editedTodo.id);
+    const originalTodo = todoList.find((t) => t.id === editedTodo.id);
 
-    // Optimistic UI
-    setTodoList(prev =>
-      prev.map(todo => (todo.id === editedTodo.id ? editedTodo : todo))
-    );
+
+    setTodoList((prev) => prev.map((t) => (t.id === editedTodo.id ? editedTodo : t)));
 
     const payload = {
       records: [
@@ -121,42 +151,42 @@ function App() {
     };
 
     try {
-      const response = await fetch(url, options);
-      if (!response.ok) throw new Error(response.statusText || "Failed to update todo");
+      const requestUrl = encodeUrl({ url, sortField, sortDirection, queryString });
+      const response = await fetch(requestUrl, options);
+
+      if (!response.ok) {
+        throw new Error(response.statusText || "Failed to update todo");
+      }
 
       const data = await response.json();
+      const saved = data.records && data.records[0];
+
       const updatedTodoFromAPI = {
-        id: data.records[0].id,
-        title: data.records[0].fields.title,
-        isCompleted: data.records[0].fields.isCompleted || false,
+        id: saved.id,
+        title: saved.fields.title,
+        isCompleted: saved.fields.isCompleted || false,
       };
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === updatedTodoFromAPI.id ? updatedTodoFromAPI : todo))
-      );
+
+    
+      setTodoList((prev) => prev.map((t) => (t.id === updatedTodoFromAPI.id ? updatedTodoFromAPI : t)));
     } catch (error) {
       console.error(error);
       setErrorMessage(`${error.message}. Reverting todo...`);
 
-      // Rollback
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === originalTodo.id ? originalTodo : todo))
-      );
+         setTodoList((prev) => prev.map((t) => (t.id === originalTodo.id ? originalTodo : t)));
     } finally {
       setIsSaving(false);
     }
   }
 
-  // Complete Todo
-  async function completeTodo(id) {
+    async function completeTodo(id) {
     setErrorMessage("");
     setIsSaving(true);
 
-    const originalTodo = todoList.find(todo => todo.id === id);
+    const originalTodo = todoList.find((t) => t.id === id);
 
-    // Optimistic UI
-    setTodoList(prev =>
-      prev.map(todo => (todo.id === id ? { ...todo, isCompleted: true } : todo))
-    );
+
+    setTodoList((prev) => prev.map((t) => (t.id === id ? { ...t, isCompleted: true } : t)));
 
     const payload = {
       records: [
@@ -180,26 +210,29 @@ function App() {
     };
 
     try {
-      const response = await fetch(url, options);
-      if (!response.ok) throw new Error(response.statusText || "Failed to complete todo");
+      const requestUrl = encodeUrl({ url, sortField, sortDirection, queryString });
+      const response = await fetch(requestUrl, options);
+
+      if (!response.ok) {
+        throw new Error(response.statusText || "Failed to complete todo");
+      }
 
       const data = await response.json();
+      const saved = data.records && data.records[0];
+
       const updatedTodoFromAPI = {
-        id: data.records[0].id,
-        title: data.records[0].fields.title,
-        isCompleted: data.records[0].fields.isCompleted || false,
+        id: saved.id,
+        title: saved.fields.title,
+        isCompleted: saved.fields.isCompleted || false,
       };
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === updatedTodoFromAPI.id ? updatedTodoFromAPI : todo))
-      );
+
+      setTodoList((prev) => prev.map((t) => (t.id === updatedTodoFromAPI.id ? updatedTodoFromAPI : t)));
     } catch (error) {
       console.error(error);
       setErrorMessage(`${error.message}. Reverting todo...`);
 
-      // Rollback
-      setTodoList(prev =>
-        prev.map(todo => (todo.id === originalTodo.id ? originalTodo : todo))
-      );
+      
+      setTodoList((prev) => prev.map((t) => (t.id === originalTodo.id ? originalTodo : t)));
     } finally {
       setIsSaving(false);
     }
@@ -208,6 +241,8 @@ function App() {
   return (
     <>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
+
+    
       <TodoList
         todoList={todoList}
         onCompleteTodo={completeTodo}
@@ -215,6 +250,18 @@ function App() {
         isLoading={isLoading}
       />
 
+      <hr />
+
+       <TodosViewForm
+        sortField={sortField}
+        setSortField={setSortField}
+        sortDirection={sortDirection}
+        setSortDirection={setSortDirection}
+        queryString={queryString}          /* <-- NEW prop */
+        setQueryString={setQueryString}    /* <-- NEW prop */
+      />
+
+     
       {errorMessage && (
         <div>
           <hr />
