@@ -6,17 +6,6 @@ import TodoList from './features/TodoList/TodoList.jsx';
 import TodosViewForm from './features/TodosViewForm.jsx';
 
 
-function encodeUrl({ url, sortField, sortDirection, queryString }) {
-  let searchQuery = "";
-  if (queryString) {
-    searchQuery = `&filterByFormula=SEARCH("${queryString}", {title})`;
-   
-  }
-
-  const sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  return encodeURI(`${url}?${sortQuery}${searchQuery}`);
-}
-
 function App() {
   
   const [todoList, setTodoList] = useState([]);
