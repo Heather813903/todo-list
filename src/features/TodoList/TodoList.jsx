@@ -15,7 +15,7 @@ function TodoList({ todoList, onCompleteTodo, onUpdateTodo, isLoading }) {
                 <p>Add todo above to get started</p>
             ) : (
               
-                <ul>
+                <ul className={styles.todoList}>
                     {filteredTodoList.map(todo => 
                         <TodoListItem 
                         key={todo.id} 
