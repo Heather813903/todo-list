@@ -1,4 +1,36 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+
+const StyledForm = styled.form`
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+`;
+
+const StyledSection = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: .05rem;
+    align-items: center;
+`;
+
+const StyledInput = styled.input`
+  padding: 0.25rem;
+`;
+
+const StyledSelect = styled.select`
+  padding: 0.25rem;
+`;
+
+const StyledButton = styled.button`
+  padding: 0.25rem 0.5rem;
+
+  &:disabled {
+    font-style: italic;
+    opacity: 0.7;
+  }
+`;
 
 export default function TodosViewForm({ 
   sortField,
@@ -27,24 +59,25 @@ export default function TodosViewForm({
 
     
   return (
-    <form onSubmit={preventRefresh}>    
-        <div>
+    <StyledForm onSubmit={preventRefresh}>    
+        <StyledSection>
           <label htmlFor='search'>Search todos:</label>
-          <input  
+          <StyledInput  
             id="search"
             type="text"
             value={localQueryString}
             onChange={e => setLocalQueryString(e.target.value)}
           />
-          <button
+           <StyledButton
             type="button"
             onClick={() => setLocalQueryString('')}          
           >
             Clear  
-          </button>
-        </div>
+          </StyledButton>
+        </StyledSection>
+          
 
-        <div>
+        <StyledSection>
           <label htmlFor="sortField">Sort by:</label>
           <select 
             id="sortField"
@@ -57,7 +90,7 @@ export default function TodosViewForm({
           </select> 
 
           <label htmlFor="sortDirection">Direction:</label> 
-          <select 
+          <StyledSelect 
             id="sortDirection"
              name="sortDirection"
             value={sortDirection}
@@ -66,8 +99,8 @@ export default function TodosViewForm({
 
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>    
-          </select>      
-        </div>
-    </form>
+           </StyledSelect>
+        </StyledSection>
+    </StyledForm>
   )
 }
