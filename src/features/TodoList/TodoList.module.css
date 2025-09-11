@@ -1,5 +1,4 @@
-.list {
-    padding: 0;
-    margin: 0;
-    list-style: none;
+.listItem {
+    padding-bottom: .05rem;
+
 }
