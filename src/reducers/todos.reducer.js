@@ -1,0 +1,85 @@
+const actions = {
+     // actions in useEffect that loads todos
+    fetchTodos: 'fetchTodos',
+    loadTodos: 'loadTodos',
+
+    // found in useEffect and addTodo to handle failed requests
+    setLoadError: 'setLoadError',
+
+    //actions found in addTodo
+    startRequest: 'startRequest',
+    addTodo: 'addTodo',
+    endRequest: 'endRequest',
+
+    //actions found in helper functions
+    updateTodo:'updateTodo',
+    completeTodo:'completeTodo',
+
+    //reverts todos when requests fails
+    revertTodo:'revertTodo',
+
+    //action on Dismiss Error button
+    clearError:'clearError',
+};
+
+function reducer(state = initiakState, action) {
+    switch (action.type) {
+        case actions.fetchTodos:
+            return {
+                ...state,
+            };
+        case actions.loadTodos:
+            return {
+                ...state,
+            };
+        case actions.setLoadError:
+            return {
+                ...state,
+            };
+        case actions.startRequest:
+            return {    
+                ...state,
+            }; 
+        case actions.addTodo:
+            return {
+                ...state,   
+            };
+        case actions.endRequest:
+            return {    
+                ...state,
+            };
+        case actions.updateTodo:
+            return {        
+                ...state,
+            };
+        case actions.completeTodo:
+            return {        
+                ...state,   
+            };
+        case actions.revertTodo:
+            return {    
+                ...state,
+            };
+        case actions.clearError:
+            return {    
+                ...state,
+            };
+
+        default:
+            return state;   
+    }
+    }
+                
+                
+
+
+const initialState = {
+    todos: [], // was useState([])
+    isLoading: false, // was UseState(false)
+    isSaving: false, // was useState(false)
+    errorMessage:'', //was useState('')
+
+
+};
+
+export { actions, initialState, todosReducer };
