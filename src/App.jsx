@@ -1,6 +1,6 @@
 // src/App.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import './App.css';
+import styles from "./App.module.css";
 import TodoForm from './features/TodoForm';
 import TodoList from './features/TodoList/TodoList.jsx';
 import TodosViewForm from './features/TodosViewForm.jsx';
@@ -238,7 +238,9 @@ function App() {
   }
 
   return (
-    <>
+    
+
+    <div className={styles.app}>
       <TodoForm onAddTodo={addTodo} isSaving={isSaving} />
 
     
@@ -262,13 +264,13 @@ function App() {
 
      
       {errorMessage && (
-        <div>
+        <div className={styles.errorContainer}>
           <hr />
           <p>{errorMessage}</p>
           <button onClick={() => setErrorMessage("")}>Dismiss</button>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
