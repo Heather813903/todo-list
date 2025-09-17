@@ -45,10 +45,11 @@ function reducer(state = initialState, action) {
                 ...state,
                 todoList: action.records.map((record) => ({
                     id: record.id,
-                    title: record.title,
-                    isCompleted: record.isCompleted
+                    title: record.fields.title,
+                    isCompleted: record.fields.isCompleted || false,
                 })),
-                isLoading: false, 
+                isLoading: false,
+               
             };
         case actions.setLoadError:
             return {
@@ -97,12 +98,11 @@ function reducer(state = initialState, action) {
 
             
         case actions.completeTodo:
-            const updatedTodosList = state.todoList.map(todo =>
-                todo.id === action.id ? { ...todo, isCompleted: !todo.isCompleted } : todo
-            );
             return {        
                 ...state,   
-                todoList: updatedTodosList,
+                todoList: state.todoList.map(todo =>
+                    todo.id === action.editedTodo.id ? action.editedTodo : todo
+                ),
             };
         
         case actions.clearError:
