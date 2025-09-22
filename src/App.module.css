@@ -1,26 +1,101 @@
 /* App.module.css */
 
-/* Center the app in the viewport */
+/* General app styling */
 .app {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center; /* so content starts below header */
+  background: linear-gradient(to right, #fceabb, #f8b500);
   min-height: 100vh;
-  background-color: #f0f8ff; /* soft, playful background */
-  background-image: url('/images/clouds.png'); /* optional light pattern */
-  background-size: cover;
-  background-position: top center;
   padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
+/* Header/logo */
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
 
-/* Style for error message container */
-.errorContainer {
-  border: 1px solid red;
+.logo {
+  height: 50px;
+  margin-right: 1rem;
+}
+
+h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+/* TodoList styling */
+.todoList {
+  list-style: none;
+  padding: 0;
+}
+
+.listItem {
+  background-color: #fff8dc;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.listItem:hover {
+  background-color: #fff3e0;
+  transform: translateX(5px);
+}
+
+/* Buttons */
+button {
+  background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background-color: #ff4c3b;
+}
+
+/* TextInput styling */
+input[type="text"] {
   padding: 0.5rem;
-  margin: 1rem 0;
   border-radius: 6px;
-  background-color: #ffe5e5;
-  color: darkred;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+/* Error container */
+.errorContainer {
+  background-color: #ffe6e6;
+  color: #cc0000;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+/* TodosViewForm / sorting & query area */
+.todosViewForm {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Footer with fun quote */
+.footer {
+  text-align: center;
+  margin-top: 2rem;
+  font-style: italic;
+  color: #555;
 }
