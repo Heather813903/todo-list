@@ -1,0 +1,28 @@
+/* Header.module.css */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+h1 {
+  text-align: center;
+  flex-grow: 1; /* ensures title is centered */
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  gap: 1rem; /* spacing between links */
+  justify-content: flex-end;
+}
+
+.active {
+  color: gray; /* subdued color for active link */
+}
+
+.inactive {
+  color: black; /* primary text color for inactive link */
+}
+
