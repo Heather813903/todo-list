@@ -89,7 +89,7 @@ useEffect(() => {
         >Previous</button>
         <span>Page {currentPage} of {totalPages}</span>
         <button onClick={handleNextPage}
-        diabled={currentPage === totalPages}
+        disabled={currentPage === totalPages}
         >Next</button>
       </div>
 

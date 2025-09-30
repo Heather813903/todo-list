@@ -1,15 +1,15 @@
 import React, { useReducer, useState, useEffect, useCallback } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import styles from "./App.module.css";
 import TodosPage from './pages/TodosPage.jsx';
 import Header from './shared/Header.jsx';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import About from './pages/About.jsx';
+import NotFound from './pages/NotFound.jsx';
 import {
   todosReducer,
   actions as todosActions,
   initialState as initialTodosState,
 } from './reducers/todos.reducer.js';
-import About from './pages/About.jsx';
-import NotFound from './pages/NotFound.jsx';
 
 
 function App() {
@@ -153,10 +153,10 @@ function App() {
         />
         <Route
           path="/about"
-          element={<h1>About</h1>} />
+          element={<About />}  />
         <Route
           path="*"
-          element={<h1>Not Found</h1>} />
+          element={<NotFound />} />
       </Routes>
 
       {todoState.errorMessage && (
