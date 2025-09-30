@@ -24,6 +24,7 @@
 h1 {
   font-size: 2rem;
   margin: 0;
+  text-align: center;
 }
 
 /* TodoList styling */
@@ -99,3 +100,31 @@ input[type="text"] {
   font-style: italic;
   color: #555;
 }
+.active {
+  color: #666;
+  font-weight: bold;
+}
+
+.inactive {
+  color: #000;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.navContainer {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;  
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
